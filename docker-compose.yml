@@ -1,7 +1,7 @@
 services:
 
   serviceregistry:
-    image: 'noyandocker/serviceregistry:latest'
+    image: 'igoevannel/serviceregistry:latest'
     container_name: serviceregistry
     ports:
       - '8761:8761'
@@ -9,7 +9,7 @@ services:
       - backend
 
   configserver:
-    image: 'noyandocker/configserver:latest'
+    image: 'igorvannel/configserver:latest'
     container_name: configserver
     ports:
       - '9296:9296'
@@ -26,7 +26,7 @@ services:
       - backend
 
   apigateway:
-    image: 'noyandocker/apigateway:latest'
+    image: 'igorvannel/apigateway:latest'
     container_name: apigateway
     ports:
       - '9090:9090'
@@ -62,7 +62,7 @@ services:
 
 
   authservice:
-    image: 'noyandocker/authservice:latest'
+    image: 'igorvannel/authservice:latest'
     container_name: authservice
     ports:
       - '7777:7777'
@@ -77,74 +77,6 @@ services:
         condition: service_healthy
       configserver:
         condition: service_started
-    networks:
-      - backend
-
-
-  productservice:
-    image: 'noyandocker/productservice:latest'
-    container_name: productservice
-    ports:
-      - '8081:8081'
-    environment:
-      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
-      - CONFIG_SERVER_URL=http://configserver:9296
-      - spring.datasource.url=jdbc:mysql://database:3306/productdb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Turkey
-      - spring.datasource.username=root
-      - spring.datasource.password=ippavlova_1990
-      - ZIPKIN_URL=http://zipkin:9411
-    depends_on:
-      database:
-        condition: service_healthy
-      configserver:
-        condition: service_started
-      zipkin:
-        condition: service_healthy
-    networks:
-      - backend
-
-  orderservice:
-    image: 'noyandocker/orderservice:latest'
-    container_name: orderservice
-    ports:
-      - '8082:8082'
-    environment:
-      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
-      - CONFIG_SERVER_URL=http://configserver:9296
-      - spring.datasource.url=jdbc:mysql://database:3306/orderdb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Turkey
-      - spring.datasource.username=root
-      - spring.datasource.password=ippavlova_1990
-      - ZIPKIN_URL=http://zipkin:9411
-    depends_on:
-      database:
-        condition: service_healthy
-      configserver:
-        condition: service_started
-      zipkin:
-        condition: service_healthy
-    networks:
-      - backend
-
-
-  paymentservice:
-    image: 'noyandocker/paymentservice:latest'
-    container_name: paymentservice
-    ports:
-      - '8083:8083'
-    environment:
-      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
-      - CONFIG_SERVER_URL=http://configserver:9296
-      - spring.datasource.url=jdbc:mysql://database:3306/paymentdb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Turkey
-      - spring.datasource.username=root
-      - spring.datasource.password=ippavlova_1990
-      - ZIPKIN_URL=http://zipkin:9411
-    depends_on:
-      database:
-        condition: service_healthy
-      configserver:
-        condition: service_started
-      zipkin:
-        condition: service_healthy
     networks:
       - backend
 
