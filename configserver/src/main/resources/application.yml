@@ -8,7 +8,9 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/Geeks-Develop/config-server.git
+          username: Rapter1990
+          password: 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
+          uri: https://github.com/Rapter1990/springappconfig
           clone-on-start: true
 
 

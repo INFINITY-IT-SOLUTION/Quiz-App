@@ -8,23 +8,21 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="apigateway" />
-        <module name="authservice" />
-        <module name="productservice" />
+        <module name="auth-service" />
         <module name="configserver" />
         <module name="service-registry" />
-        <module name="orderservice" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="auth-service" target="11" />
+      <module name="orderservice" target="11" />
       <module name="paymentservice" target="11" />
+      <module name="productservice" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="apigateway" options="-parameters" />
       <module name="auth-service" options="-parameters" />
-      <module name="authservice" options="-parameters" />
       <module name="configserver" options="-parameters" />
       <module name="orderservice" options="-parameters" />
       <module name="paymentservice" options="-parameters" />

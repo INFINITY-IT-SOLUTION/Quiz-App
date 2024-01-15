@@ -11,9 +11,9 @@
     <file url="file://$PROJECT_DIR$/orderservice/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/paymentservice/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/paymentservice/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/productservice/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/productservice/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-registry/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service-registry/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/user-service/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/user-service/src/main/resources" charset="UTF-8" />
   </component>
 </project>
