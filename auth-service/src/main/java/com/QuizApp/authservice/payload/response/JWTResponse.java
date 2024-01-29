@@ -2,6 +2,7 @@ package com.QuizApp.authservice.payload.response;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
