@@ -18,17 +18,17 @@ import com.QuizApp.authservice.service.RefreshTokenService;
 import com.QuizApp.authservice.service.RoleService;
 import com.QuizApp.authservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,6 +55,10 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@RequestBody SignUpRequest signUpRequest) {
 
         String username = signUpRequest.getUsername();
+        String name = signUpRequest.getName();
+        String pays = signUpRequest.getPays();
+        String telephone = signUpRequest.getTelephone();
+        String daten = signUpRequest.getDaten();
         String email = signUpRequest.getEmail();
         String password = signUpRequest.getPassword();
         Set<String> strRoles = signUpRequest.getRoles();
@@ -69,6 +73,10 @@ public class AuthController {
         }
 
         User user = new User();
+        user.setName(name);
+        user.setPays(pays);
+        user.setDaten(daten);
+        user.setTelephone(telephone);
         user.setEmail(email);
         user.setUsername(username);
         user.setPassword(encoder.encode(password));
@@ -114,17 +122,22 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        String username = loginRequest.getUsername();
+        String usernameOrEmail = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username,password);
+        User user = userService.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail));
 
-        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                user.getUsername(), password);
+
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         String jwt = jwtUtils.generateJwtToken(userDetails.getUsername());
 
-        List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
@@ -139,6 +152,8 @@ public class AuthController {
 
         return ResponseEntity.ok(jwtResponse);
     }
+
+
 
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@RequestBody TokenRefreshRequest request) {
