@@ -1,0 +1,48 @@
+
+api:
+  jwt:
+    secret: mysecretkey
+    expireMs: 120000
+    refrEshexpireMs: 120000
+
+cloudinary:
+  cloud-name: dx7qe2siq
+  api-key: 371378467838313
+  api_secret: dE5D2q0pdUvKqoswxR4JUt1IDQ4
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/usersdb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Turkey
+    username: igor
+    password: admin
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: update
+  application:
+    name: AUTH-SERVICE
+    config:
+      import: optional:configserver:${CONFIG_SERVER_URL:http://localhost:9296}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: sibpro61@gmail.com
+    password: csayxfbgllsnlact
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+        debug: true  # Activer le débogage pour voir les journaux
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_ADDRESS:http://localhost:8761/eureka}
