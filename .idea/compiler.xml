@@ -17,6 +17,7 @@
       <module name="orderservice" target="11" />
       <module name="paymentservice" target="11" />
       <module name="productservice" target="11" />
+      <module name="wrapper" target="1.5" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
