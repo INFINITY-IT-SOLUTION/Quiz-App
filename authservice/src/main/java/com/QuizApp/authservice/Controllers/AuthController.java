@@ -95,7 +95,7 @@ public class AuthController {
     })
     @PostMapping(value = "/sign-up", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> signUp(@ModelAttribute @Valid SignUpRequest request) throws MessagingException, IOException {
-        if (userRepository.findUserByEmail(request.getEmail()) != null) {
+        if (userRepository.findByEmail(request.getEmail()) != null) {
             return ResponseEntity.badRequest().body(new EmailExistResponse("This email already exists."));
         }
         Authority authority = authorityRepository.findById(2L)

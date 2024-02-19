@@ -1,0 +1,23 @@
+server:
+  port: 8060
+  forward-headers-strategy: framework
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://service-registry:8761/eureka}
+  instance:
+    preferIpAddress: true
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: AUTH-SERVICE
+          uri: http://localhost:7777
+          predicates:
+            - Path=/api/v1/auth/**
+        - id: DEMO-SERVICE
+            uri: http://localhost:9090
+            predicates:
+              - Path=/demo/**

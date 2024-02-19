@@ -1,0 +1,96 @@
+server:
+  port: 8004
+  forward-headers-strategy: framework
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://service-registry:8761/eureka}
+  instance:
+    preferIpAddress: true
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+
+springdoc:
+  cache:
+    disabled: true
+
+info:
+  app:
+    name: ms-customer
+    description: Module serveur customer
+    version: 0.0.1
+    environnement: Local
+
+database:
+  host: simpay_postgres
+  port: 5432
+  name: dbsimpay
+  schema: customer
+  username: dbuser
+  password: dbpass
+
+spring:
+  # Spring DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: customer
+        jdbc.lob.non_contextual_creation: true
+    open-in-view: true
+  datasource:
+    url: jdbc:postgresql://${database.host}:${database.port}/${database.name}?currentSchema=${database.schema}
+    driver-class-name: org.postgresql.Driver
+    username: ${database.username}
+    password: ${database.password}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://simpay-keycloak-dev.net/realms/simpay
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+
+  banner:
+    location=classpath:banner.txt
+    charset=UTF-8
+
+  flyway:
+    enabled: true
+    encoding: utf-8
+    locations: classpath:db/migration,classpath:db/postgresql/migration
+    out-of-order: false
+
+jwt:
+  auth:
+    converter:
+      resource-id: authentication-service
+      principal-attribute: preferred_username
+
+management:
+  # For actuator
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  tracing:
+    sampling:
+      probability: 1.0
+
+module:
+  swagger:
+    security.enable: true
+
+
+client:
+  base:
+    url: https://simpay-api-dev.com/ms-customer/api
+  auth:
+    url: https://simpay-api-dev.com/ms-auth/api

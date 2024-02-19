@@ -16,6 +16,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 
+@Tag(name = "Forgot password controller", description = "The API to reset password.")
 @RequestMapping("/api/v1/password")
 @RestController
 public class PasswordForgetController {
@@ -68,7 +71,7 @@ public class PasswordForgetController {
         if(!userRepository.existsByEmail(request.email())){
             return ResponseEntity.status(404).body(new UserNotFoundResponse("User not found by this email."));
         }
-        UserDetails user = userRepository.findUserByEmail(request.email());
+        UserDetails user = userRepository.findByEmail(request.email());
 
         if(passwordResetTokenRepository.existsByUser((User) user)){
             return ResponseEntity.badRequest().body(new PasswordResponse("An email has already been sent."));

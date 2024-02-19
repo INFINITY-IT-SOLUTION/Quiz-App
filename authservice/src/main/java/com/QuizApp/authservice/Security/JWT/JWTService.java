@@ -17,7 +17,7 @@ import java.time.ZoneOffset;
 @Service
 public class JWTService {
 
-    @Value("${api.jwt.secret}")
+    @Value("mysecretkey")
     private String secret;
 
     public String generateToken(User user) throws CustomException {
