@@ -17,15 +17,15 @@ public class QuestionService
     @Autowired
     private QuestionRepository questionRepository;
 
-    public List<Question> getAllQuestions()
-    {
+    public List<Question> getAllQuestions() {
+
         return questionRepository.findAll();
     }
 
-    public String addQuestion(Question question) {
-        Integer id=questionRepository.save(question).getId();
+    public Question addQuestion(Question question) {
+        Question d=questionRepository.save(question);
 
-        return "Question added with id : "+id;
+        return d;
     }
 
     public List<Question> getQuestionsByCategory(String category)

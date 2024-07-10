@@ -1,5 +1,6 @@
 server:
-  port: 5001
+  port: 5002
+  forward-headers-strategy: framework
 
 spring:
   jpa:

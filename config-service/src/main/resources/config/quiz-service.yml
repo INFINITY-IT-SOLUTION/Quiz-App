@@ -1,70 +1,36 @@
+
 server:
-  port: 8060
+  port: 5001
   forward-headers-strategy: framework
 
+Spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/questiondb?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Turkey
+    username: igor
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
 eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
   instance:
-    preferIpAddress: true
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
 
-logging:
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
-  level:
-    org.springframework.cloud.gateway: TRACE
-    org.springframework.http.server.reactive: TRACE
+  logging:
+    pattern:
+      console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
 
-spring:
-  cloud:
-    gateway:
-      httpclient:
-        ssl:
-          useInsecureTrustManager: true
-      discovery:
-        locator:
-          enabled: true
-      routes:
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/user/**, /Quiz-App/user/**
-          filters:
-            - RewritePath=/Quiz-App/user/(?<path>.*), /$\{path}
-            - RewritePath=/user/(?<path>.*), /$\{path}
-        - id: question-service
-          uri: lb://question-service
-          predicates:
-            - Path=/question/**, /Quiz-App/question/**
-          filters:
-            - RewritePath=/Quiz-App/question/(?<path>.*), /$\{path}
-            - RewritePath=/question/(?<path>.*), /$\{path}
-        - id: quiz-service
-          uri: lb://quiz-service
-          predicates:
-            - Path=/quiz/**, /Quiz-App/quiz/**
-          filters:
-            - RewritePath=/Quiz-App/quiz/(?<path>.*), /$\{path}
-            - RewritePath=/quiz/(?<path>.*), /$\{path}
-        - id: openapi-proxy
-          uri: https://demos.springdoc.org
-          predicates:
-            - Path=/Quiz-App/v3/api-docs/**
-          filters:
-            - RewritePath=/Quiz-App/v3/api-docs/(?<path>.*), /Quiz-App/$\{path}/v3/api-docs
-        - id: openapi
-          uri: http://localhost:${server.port}
-          predicates:
-            - Path=/v3/api-docs/**
-          filters:
-            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
-
-springdoc:
-  cache:
-    disabled: true
-  version: '@springdoc.version@'
-  swagger-ui:
-    use-root-path: true
-  api-docs:
-    version: openapi_3_1
+  springdoc:
+    version: '@springdoc.version@'
+    api-docs:
+      version: openapi_3_1
+    cache:
+      disabled: true

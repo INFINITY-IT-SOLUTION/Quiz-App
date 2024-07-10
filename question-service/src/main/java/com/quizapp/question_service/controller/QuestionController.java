@@ -27,7 +27,7 @@ public class QuestionController {
 
     @Operation(summary="POST operation",description="API will accept json Question obj and add Question")
     @PostMapping("/addquestion")
-    public ResponseEntity<String> addQuestion(@RequestBody Question question)
+    public ResponseEntity<Question> addQuestion(@RequestBody Question question)
     {
         return new ResponseEntity(questionService.addQuestion(question),HttpStatus.CREATED);
     }
