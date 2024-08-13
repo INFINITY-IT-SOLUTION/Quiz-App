@@ -1,0 +1,73 @@
+server:
+  port: 8060
+  forward-headers-strategy: framework
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://service-registry:8761/eureka}
+  instance:
+    preferIpAddress: true
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} ${LOG_LEVEL_PATTERN:-%5p} %m%n"
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: TRACE
+
+spring:
+  cloud:
+    gateway:
+      httpclient:
+        ssl:
+          useInsecureTrustManager: true
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**, /Quiz-App/user/**
+          filters:
+            - ContextPathRewritePath=/Quiz-App/user/(?<path>.*), /$\{path}
+            - RewritePath=/user/(?<path>.*), /$\{path}
+        - id: question-service
+          uri: lb://question-service
+          predicates:
+            - Path=/question/**, /Quiz-App/question/**
+          filters:
+            - ContextPathRewritePath=/Quiz-App/question/(?<path>.*), /$\{path}
+            - RewritePath=/question/(?<path>.*), /$\{path}
+        - id: quiz-service
+          uri: lb://quiz-service
+          predicates:
+            - Path=/quiz/**, /Quiz-App/quiz/**
+          filters:
+            - ContextPathRewritePath=/Quiz-App/quiz/(?<path>.*), /$\{path}
+            - RewritePath=/quiz/(?<path>.*), /$\{path}
+        - id: openapi-proxy
+          uri: https://demos.springdoc.org
+          predicates:
+            - Path=/Quiz-App/v3/api-docs/**
+          filters:
+            - RewritePath=/Quiz-App/v3/api-docs/(?<path>.*), /Quiz-App/$\{path}/v3/api-docs
+        - id: openapi
+          uri: http://localhost:${server.port}
+          predicates:
+            - Path=/v3/api-docs/**
+          filters:
+            - RewritePath=/v3/api-docs/(?<path>.*), /$\{path}/v3/api-docs
+
+
+
+
+springdoc:
+  cache:
+    disabled: true
+  version: '@springdoc.version@'
+  swagger-ui:
+    use-root-path: true
+  api-docs:
+    version: openapi_3_1
