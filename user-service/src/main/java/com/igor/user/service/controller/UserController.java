@@ -2,16 +2,13 @@ package com.igor.user.service.controller;
 
 import com.igor.user.service.model.User;
 import com.igor.user.service.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
-
 public class UserController {
     private final UserService userService;
 
@@ -19,16 +16,15 @@ public class UserController {
         this.userService = userService;
     }
 
-
     @GetMapping("/profile")
-    public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String jwt) {
-        User user = userService.getUserProfile(jwt);
-        return new ResponseEntity<>(user, HttpStatus.OK);
+    @SecurityRequirement(name = "bearerAuth")
+    public User getUserProfile() {
+        return userService.getUserProfile();
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<User>> getUsers(@RequestHeader("Authorization") String jwt) {
-        List<User> users = userService.getAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    @SecurityRequirement(name = "bearerAuth")
+    public List<User> getUsers() {
+        return userService.getAllUsers();
     }
 }

@@ -1,0 +1,10 @@
+server:
+  port: 8761
+  forward-headers-strategy: framework
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER:http://service-registry-dev:8761/eureka}
+    registerWithEureka: false
+    fetchRegistry: false
